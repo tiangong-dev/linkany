@@ -12,8 +12,9 @@ export async function appendAudit(logPath: string, result: Result) {
   await fs.appendFile(logPath, line, 'utf8')
 }
 
-export async function tryAppendAuditStep(result: Result, manifestPath: string, opts?: CommonOptions): Promise<Result> {
-  const logPath = defaultAuditLogPath(manifestPath, opts)
+export async function tryAppendAuditStep(result: Result, manifestPath?: string, opts?: CommonOptions): Promise<Result> {
+  const logPath = opts?.auditLogPath ?? (manifestPath ? `${path.resolve(manifestPath)}.log.jsonl` : undefined)
+  if (!logPath) return result
   try {
     await appendAudit(logPath, result)
     result.steps.push({ kind: 'audit', message: 'Append audit log', status: 'executed', paths: { file: logPath } })

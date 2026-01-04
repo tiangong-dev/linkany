@@ -21,9 +21,9 @@ describe('linkany safety (minimal)', () => {
     vi.mocked(fs.pathExists).mockResolvedValue(true)
     vi.mocked(fs.lstat).mockResolvedValue({ isSymbolicLink: () => false, isDirectory: () => false } as any)
 
-    const res = await add('/m.json', { source: '/s', target: '/t' })
-    expect(res.ok).toBe(false)
-    expect(res.errors[0]).toMatch(/source and target both exist/i)
+    const { result } = await add('/m.json', { source: '/s', target: '/t' })
+    expect(result.ok).toBe(false)
+    expect(result.errors[0]).toMatch(/source and target both exist/i)
   })
 
   it('install aborts if target exists and is not a symlink', async () => {
@@ -40,9 +40,9 @@ describe('linkany safety (minimal)', () => {
       throw new Error('ENOENT')
     })
 
-    const res = await install('/m.json')
-    expect(res.ok).toBe(false)
-    expect(res.errors[0]).toMatch(/target exists and is not a symlink/i)
+    const { result } = await install('/m.json')
+    expect(result.ok).toBe(false)
+    expect(result.errors[0]).toMatch(/target exists and is not a symlink/i)
     expect(fs.symlink).not.toHaveBeenCalled()
   })
 
@@ -52,8 +52,8 @@ describe('linkany safety (minimal)', () => {
     vi.mocked(fs.lstat).mockResolvedValue({ isSymbolicLink: () => true } as any)
     vi.mocked(fs.readlink).mockResolvedValue('/s' as any)
 
-    const res = await remove('/m.json', '/t', { dryRun: true })
-    expect(res.ok).toBe(true)
+    const { result } = await remove('/m.json', '/t', { dryRun: true })
+    expect(result.ok).toBe(true)
     expect(fs.unlink).not.toHaveBeenCalled()
   })
 })

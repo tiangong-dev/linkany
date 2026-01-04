@@ -134,9 +134,9 @@ export async function main(argv: string[] = process.argv.slice(2)): Promise<numb
       const manifestPath = await resolveManifestPath(args)
       const mapping = parseAddArgs(args)
       if (args.length) die(`Unknown arguments: ${args.join(' ')}`)
-      const res = await add(manifestPath, mapping, opts)
-      process.stdout.write(JSON.stringify(res, null, 2) + '\n')
-      return res.ok ? 0 : 1
+    const { result } = await add(manifestPath, mapping, opts)
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n')
+    return result.ok ? 0 : 1
     }
 
     if (cmd === 'remove') {
@@ -146,27 +146,27 @@ export async function main(argv: string[] = process.argv.slice(2)): Promise<numb
       const key = args.shift()
       if (!key) die('remove requires <key>')
       if (args.length) die(`Unknown arguments: ${args.join(' ')}`)
-      const res = await remove(manifestPath, key, { ...opts, keepLink })
-      process.stdout.write(JSON.stringify(res, null, 2) + '\n')
-      return res.ok ? 0 : 1
+    const { result } = await remove(manifestPath, key, { ...opts, keepLink })
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n')
+    return result.ok ? 0 : 1
     }
 
     if (cmd === 'install') {
       const opts = parseCommonOptions(args)
       const manifestPath = await resolveManifestPath(args)
       if (args.length) die(`Unknown arguments: ${args.join(' ')}`)
-      const res = await install(manifestPath, opts)
-      process.stdout.write(JSON.stringify(res, null, 2) + '\n')
-      return res.ok ? 0 : 1
+    const { result } = await install(manifestPath, opts)
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n')
+    return result.ok ? 0 : 1
     }
 
     if (cmd === 'uninstall') {
       const opts = parseCommonOptions(args)
       const manifestPath = await resolveManifestPath(args)
       if (args.length) die(`Unknown arguments: ${args.join(' ')}`)
-      const res = await uninstall(manifestPath, opts)
-      process.stdout.write(JSON.stringify(res, null, 2) + '\n')
-      return res.ok ? 0 : 1
+    const { result } = await uninstall(manifestPath, opts)
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n')
+    return result.ok ? 0 : 1
     }
 
     die(`Unknown command: ${cmd}`)

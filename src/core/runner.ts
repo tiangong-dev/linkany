@@ -9,7 +9,7 @@ function nowIso() {
 
 export interface RunOperationInput {
   operation: Result['operation']
-  manifestPath: string
+  manifestPath?: string
   steps: Step[]
   opts?: CommonOptions
   /**
@@ -30,7 +30,7 @@ export async function runOperation(input: RunOperationInput): Promise<Result> {
   })
 
   res.operation = input.operation
-  res.manifestPath = input.manifestPath
+  if (input.manifestPath) res.manifestPath = input.manifestPath
   res.startedAt = startedAt
   res.durationMs = Date.now() - startedMs
   res.finishedAt = nowIso()

@@ -90,7 +90,16 @@
 
 ## API
 
-### `add(manifestPath, { source, target, kind?, atomic? }, opts?)`
+`linkany` 的 API 支持两种输入方式，合并为同一个入口：
+
+- **文件模式**：`manifest` 传入 manifest 文件路径（string）
+- **in-memory 模式**：`manifest` 直接传入 manifest JSON/对象
+
+四个核心 API 的返回值统一为：
+
+- `{ result, manifest }`（`result` 为本次操作结果，`manifest` 为操作后的 manifest 对象）
+
+### `add(manifest, { source, target, kind?, atomic? }, opts?)`
 
 用途：把一条映射写入 manifest，并把 `target` 收敛为指向 `source` 的 symlink。
 
@@ -103,7 +112,7 @@
   - 再把 `target` 改成指向 `source` 的 symlink
 - **source 与 target 同时存在**：拒绝（error），要求用户手动处理冲突。
 
-### `remove(manifestPath, key, opts?)`
+### `remove(manifest, key, opts?)`
 
 用途：从 manifest 移除一条映射，并且 **默认删除 target 的 symlink**。
 
@@ -111,7 +120,7 @@
 - `opts.keepLink=true` 可仅移除 manifest 记录，不删除 target symlink。
 - **永远不删除 source**。
 
-### `install(manifestPath, opts?)`
+### `install(manifest, opts?)`
 
 用途：按 manifest 全量落地，确保每个 `target` 都是指向 `source` 的 symlink。
 
@@ -121,9 +130,16 @@
   - source 不存在
   - target 存在但不是 symlink
 
-### `uninstall(manifestPath, opts?)`
+### `uninstall(manifest, opts?)`
 
 用途：按 manifest 全量撤销，只删除 `target` 的 symlink；**永远不删除 source**。
+
+### in-memory 模式的额外 options
+
+当 `manifest` 传入 JSON/对象（而不是路径）时，`opts` 额外支持：
+
+- `baseDir?: string`：用于解析相对路径（默认 `process.cwd()`）
+- `manifestPath?: string`：仅用于 `Result.manifestPath` 与 audit 默认路径推导（不会触发读写 manifest 文件）
 
 ## 审计日志（Audit Log）
 

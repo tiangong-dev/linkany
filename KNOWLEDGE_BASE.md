@@ -15,10 +15,20 @@
 
 对外 API 只有四个（每个独立文件）：
 
-- `src/api/add.ts`: `add(manifestPath, mapping, opts?)`
-- `src/api/remove.ts`: `remove(manifestPath, key, opts?)`
-- `src/api/install.ts`: `install(manifestPath, opts?)`
-- `src/api/uninstall.ts`: `uninstall(manifestPath, opts?)`
+- `src/api/add.ts`: `add(manifest, mapping, opts?) -> { result, manifest }`
+- `src/api/remove.ts`: `remove(manifest, key, opts?) -> { result, manifest }`
+- `src/api/install.ts`: `install(manifest, opts?) -> { result, manifest }`
+- `src/api/uninstall.ts`: `uninstall(manifest, opts?) -> { result, manifest }`
+
+其中 `manifest` 参数支持两种形态（合并为一个入口）：
+
+- **文件模式**：`manifest` 为 manifest 文件路径（string）
+- **in-memory 模式**：`manifest` 为 manifest JSON/对象
+
+in-memory 模式的额外 options：
+
+- `baseDir?: string`：相对路径解析基准（默认 `process.cwd()`）
+- `manifestPath?: string`：仅用于 `Result.manifestPath` 与 audit 默认路径推导（不会触发读写 manifest 文件）
 
 统一导出：
 

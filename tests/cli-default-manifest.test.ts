@@ -32,8 +32,8 @@ describe('cli default manifest (global)', () => {
     const cfgPath = getGlobalConfigPath({ env: process.env, homeDir: tmp })
     await fs.remove(cfgPath)
 
-    vi.mocked(add as any).mockResolvedValue({ ok: true } as any)
-    vi.mocked(install as any).mockResolvedValue({ ok: true } as any)
+    vi.mocked(add as any).mockResolvedValue({ result: { ok: true }, manifest: { version: 1, installs: [] } } as any)
+    vi.mocked(install as any).mockResolvedValue({ result: { ok: true }, manifest: { version: 1, installs: [] } } as any)
   })
 
   it('manifest set writes absolute path into XDG config and show prints it', async () => {
